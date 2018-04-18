@@ -56,6 +56,7 @@ def getMails():
                 pass
         print(temp_dict)    
         #mssgs.append(temp_dict)        
+        
     #print(mssgs)
     return mssgs
 

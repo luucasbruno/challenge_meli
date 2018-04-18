@@ -13,7 +13,7 @@ class DevOpMail(Model):
         db.connect()
         db.create_tables([DevOpMail])
         for mail in mails:
-            dev_mail = DevOpMail(user_id='lucas', date = date(2018,1,1), sender='octavio')
-        dev_mail.save()
+            dev_mail = DevOpMail(user_id='lucas', date = date(w,1,1), sender=mail['Sender'])
+            dev_mail.save()
         for mail in DevOpMail.select():
             print(mail.sender)
