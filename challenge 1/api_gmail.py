@@ -1,9 +1,9 @@
-
-"""
-Shows basic usage of the Gmail API.
-
-Lists the user's Gmail labels.
-"""
+#  returns a dict like this
+#   {
+#       'messages': list of messages -> each one like this {'Date': date, 'Sender': sender, 'Subject': subject}
+#       'user': user's account email       
+#   }
+#
 from __future__ import print_function
 from apiclient.discovery import build
 from httplib2 import Http
@@ -20,26 +20,27 @@ def getMails():
         creds = tools.run_flow(flow, store)
     service = build('gmail', 'v1', http=creds.authorize(Http()))
 
-    # Call the Gmail API0():
+    # Call the Gmail API to request user's email
+    resp = service.users().getProfile(userId=user_id).execute()
+    user_email = resp['emailAddress']
+    # Call the Gmail API to resquest messages:
     response = service.users().messages().list(userId=user_id,q='subject: DevOps').execute()
-    messages = []
+    raw_messages = []
     if 'messages' in response:
-        messages.extend(response['messages'])
+        raw_messages.extend(response['messages'])
 
     while 'nextPageToken' in response:
         page_token = response['nextPageToken']
         response = service.users().messages().list(userId=user_id, q='subject: DevOps',pageToken=page_token).execute()
-        messages.extend(response['messages'])
-
+        raw_messages.extend(response['messages'])
     
-    temp_dict = {}
     mssgs = []
-
     # Get Subject, Sender and Date from mssgs
-    for message in messages:
-        resp = service.users().messages().get(userId=user_id, id=message['id']).execute()
+    for raw_mssg in raw_messages:
+        resp = service.users().messages().get(userId=user_id, id=raw_mssg['id']).execute()
         payId = resp['payload']
         headers = payId['headers']
+        temp_dict = {}
         for header in headers:
             if header['name'] == 'Subject':
                 msg_subject = header['value']
@@ -48,17 +49,19 @@ def getMails():
                 msg_date = header['value']
                 date_parse = (parser.parse(msg_date))
                 m_date = (date_parse.date())
-                temp_dict['Date'] = str(m_date)
+                temp_dict['Date'] = {'day': m_date.day,'month': m_date.month, 'year': m_date.year}
             elif header['name']=='From':
                 msg_from = header['value']
                 temp_dict['Sender'] = msg_from
             else:
                 pass
-        print(temp_dict)    
-        #mssgs.append(temp_dict)        
-        
-    #print(mssgs)
-    return mssgs
+        #print(temp_dict)    
+        mssgs.append(temp_dict)
+                
+    
+    
+    resp = {'messages': mssgs, 'user': user_email}
+    return resp
 
 
 
