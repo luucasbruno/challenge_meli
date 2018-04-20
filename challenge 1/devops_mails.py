@@ -6,10 +6,10 @@ def fetch_and_store_():
     mails, user_email = api_gmail.get_mails_info('devops')
     for m in mails:
         DevOpsMail.create(
-            user_id = user_email,
-            datetime = m['Date'],
-            sender = m['From'],
-            subject = m['Subject']
+            user_id=user_email,
+            datetime=m['Date'],
+            sender=m['From'],
+            subject=m['Subject'],
         )
 
 def list_():
