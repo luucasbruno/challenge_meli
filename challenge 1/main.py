@@ -1,8 +1,10 @@
-import api_gmail as apiGmail
-from mysql_db import DevOpMail
+import api_gmail
+from sqli_db import DevOpMail
 def main():
-    msgs = apiGmail.getMails()
+    mssgs, user_email = api_gmail.getMails() ## Nombrar mejor
     #print(msj)
     devopmail = DevOpMail()
     devopmail.insertMails(msgs)
-main()
+
+if __name__ == '__main__':
+    main()
