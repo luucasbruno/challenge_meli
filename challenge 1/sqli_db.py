@@ -10,4 +10,4 @@ class DevOpsMail(Model):
     class Meta:
         database = db
 
-db.create_tables([DevOspMail])
+db.create_tables([DevOpsMail])
