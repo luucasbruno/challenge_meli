@@ -7,7 +7,8 @@ from dateutil import parser
 def get_mails_info(query):
     """
     returns: 
-        1. A list of dicts containing info from messages that matches the word query in subject or body. The keys are 'Subject', 'Date', 'From'
+        1. A list of dicts containing info from messages that matches the word query in subject or body. 
+        The keys are 'Subject', 'Date', 'From'
         2. User's email
     """
     user_id = 'me'
@@ -31,11 +32,11 @@ def get_mails_info(query):
 
     def build_mail(id_ ): 
         """
-            Get Subject, Sender and Date from a mssg given an id
+            Get Subject, From and Date from a mssg given an id
         """
         resp = service.users().messages().get(userId=user_email, id=id_).execute()
-        payId = resp['payload']
-        headers = payId['headers']
+        payload = resp['payload']
+        headers = payload['headers']
         mail = {}
         for header in headers:
             if header['name'] == 'Subject':
@@ -44,7 +45,7 @@ def get_mails_info(query):
                 mail['Date'] = parser.parse(header['value'])
             elif header['name']=='From':
                 mail['From'] = header['value']
-        return(mail)
+        return mail
 
     if 'messages' in resp:
         mails.extend(build_mail(m['id']) for m in resp['messages']) 
