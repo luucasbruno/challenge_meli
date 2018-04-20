@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import api_gmail
 from sqli_db import DevOpsMail
 
