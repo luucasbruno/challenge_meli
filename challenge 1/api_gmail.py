@@ -50,7 +50,7 @@ def get_mails_info(query):
     if 'messages' in resp:
         mails.extend(build_mail(m['id']) for m in resp['messages']) 
     while 'nextPageToken' in resp:
-        page_token = response['nextPageToken']
+        page_token = resp['nextPageToken']
         resp = service.users().messages().list(userId=user_id, q=query,pageToken=page_token).execute()
-        mails.extend(build_mail(m['id']) for m in response['messages']) 
+        mails.extend(build_mail(m['id']) for m in resp['messages']) 
     return (mails, user_email)
